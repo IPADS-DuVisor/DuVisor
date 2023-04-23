@@ -1,0 +1,136 @@
+#!/usr/bin/expect -f
+set timeout 180
+
+
+set timeout 300
+set env(TERM) xterm-256color
+set env(SHELL) /bin/bash
+set env(HOME) /home/gitlab-runner
+set env(PATH) /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+set env(LOGNAME) gitlab-runner
+set env(SHLVL) 2
+set env(MAIL) /var/mail/gitlab-runner
+set env(SUDO_UID) 1000
+set env(SUDO_GID) 1000
+set env(SUDO_COMMAND) /bin/bash
+
+
+spawn bash -c "screen -r virt"
+ 
+expect "DuVisor"
+
+send "./scripts/local/boot.sh | tee ~/log-duvisor/network/`date +%Y-%m-%d-%T`\n"
+
+expect {
+    "root@(none)" {
+
+    }
+    timeout {
+		send "sleep 10\n"
+        send "\n"
+        expect {
+            "root@(none)" {
+
+            }
+            timeout {
+                exit -1
+            }
+        }
+    }
+}
+
+# Use blk-dev-vm-1.img to isolated from the other tests of single_vm_test
+send "cd duvisor && ./duvisor --smp 1 --initrd ./test-files-duvisor/rootfs-net.img --dtb ./test-files-duvisor/vmlinux.dtb  --kernel ./test-files-duvisor/GuestLinuxImage.ok --memory 1024 --machine duvisor_virt --block /blk-dev-vm-1.img --vmtap vmtap0 --append 'console=ttyS0 root=/dev/vda rw  console=sbi earlycon=sbi'\n"
+expect {
+    "Busybox Rootfs" {
+        send "\n ls \n"
+        expect {
+            "guest-net.sh" {}
+        }
+    }
+    
+    timeout {
+        exit -1
+    }
+}
+
+send "./guest-net.sh\n ip a \n"
+expect {
+    "eth0: <BROADCAST,MULTICAST,UP,LOWER_UP>" {
+    }
+
+    timeout {
+        exit -1
+    }
+}
+
+set timeout 500
+
+expect "#"
+send "mount /dev/vda /root && chroot root bash\n"
+
+
+expect "#" 
+send "\n\n./apache_server.sh \n"
+
+
+expect {
+    "directive globally to suppress this message" {
+    }
+
+    timeout {
+        exit -1
+    }
+}
+
+sleep 2
+
+send "\x01"; send "d"
+
+expect "DuVisor"
+
+spawn bash  -c "screen -r host"
+
+expect "DuVisor"
+
+send "ab -c 1 -n 1 http://192.168.27.201/ \n"
+
+expect "Transfer rate"
+
+send "\x01"; send "d"
+
+spawn bash  -c "screen -r virt"
+
+expect "#"
+
+send "./mount_dev.sh && ./apache_kill.sh && ./memcached_server.sh \n"
+
+expect "#"
+
+sleep 3
+
+send "\x01"; send "d"
+
+expect "DuVisor"
+
+spawn bash  -c "screen -r host"
+
+expect "DuVisor"
+
+send "memcslap --concurrency=1 --servers=192.168.27.201:11211 \n"
+
+expect {
+    "Failure" {
+	puts "Test Failed"
+	exit -1
+    }
+
+    "seconds to load data" {
+
+    }
+
+}
+
+puts "Test OK"
+
+send "\x01x"

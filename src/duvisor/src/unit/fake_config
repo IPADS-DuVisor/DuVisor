@@ -1,0 +1,6 @@
+smp = 3
+memory = 32
+kernel = unitest
+initrd = init.file
+dtb = dtb.file
+machine = duvisor_virt

@@ -1,0 +1,47 @@
+#!/usr/bin/expect -f
+source [file join [file dirname $argv0] ./duvisor_test_main_multi_vcpu.tcl]
+
+set timeout 180
+set env(TERM) xterm-256color
+set env(SHELL) /bin/bash
+set env(HOME) /home/gitlab-runner
+set env(PATH) /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+set env(LOGNAME) gitlab-runner
+set env(SHLVL) 2
+set env(MAIL) /var/mail/gitlab-runner
+set env(SUDO_UID) 1000
+set env(SUDO_GID) 1000
+set env(SUDO_COMMAND) /bin/bash
+
+spawn bash -c "killall qemu-system-riscv64"
+
+spawn bash -c "screen -r virt"
+
+send "echo test >> test.log \n"
+
+send "./scripts/local/boot.sh | tee ~/log-duvisor/multi-vcpu/`date +%Y-%m-%d-%T` \n"
+send "\n"
+expect {
+    "root@(none)" {
+
+    }
+    timeout {
+		send "sleep 10\n"
+        send "\n"
+        expect {
+            "root@(none)" {
+
+            }
+            timeout {
+                exit -1
+            }
+        }
+    }
+}
+send "\n"
+
+main_test_multi_vcpu_8
+
+puts "Test OK"
+#spawn bash -c "screen -r host"
+spawn bash -c "date >> test.log"

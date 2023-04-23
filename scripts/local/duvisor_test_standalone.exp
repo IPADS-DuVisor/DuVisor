@@ -1,0 +1,106 @@
+#!/usr/bin/expect -f
+
+set timeout 300
+spawn bash -c "killall qemu-system-riscv64"
+
+spawn bash -c "./scripts/local/boot.sh | tee ~/log-duvisor/standalone/`date +%Y-%m-%d-%T`"
+
+expect {
+    "root@(none)" {
+
+    }
+    timeout {
+		send "sleep 10\n"
+        send "\n"
+        expect {
+            "root@(none)" {
+
+            }
+            timeout {
+                exit -1
+            }
+        }
+    }
+}
+
+send "pwd \n"
+send "ls \n"
+send "ls duvisor \n"
+send "file duvisor/duvisor \n"
+
+# Use blk-dev-vm-0.img to isolated from the other tests of single_vm_test
+send "cd duvisor && ./duvisor --smp 1 --initrd ./test-files-duvisor/rootfs-net.img --dtb ./test-files-duvisor/vmlinux.dtb  --kernel ./test-files-duvisor/GuestLinuxImage.ok --memory 1024 --machine duvisor_virt --block /blk-dev-vm-0.img --vmtap vmtap0 --append 'console=ttyS0 root=/dev/vda rw  console=sbi earlycon=sbi'\n"
+expect {
+    "Busybox Rootfs" {
+        send "\n ls \n"
+        expect {
+            "guest-net.sh" {}
+        }
+    }
+    
+    timeout {
+        exit -1
+    }
+}
+
+send "./guest-net.sh\n ip a \n"
+expect {
+    "eth0: <BROADCAST,MULTICAST,UP,LOWER_UP>" {
+        send "/ping-test.sh 10 \n"
+        expect {
+            "Ping test OK" {}
+
+            timeout {
+                exit -1
+            }
+        }
+    }
+
+    timeout {
+        exit -1
+    }
+}
+
+set timeout 1000
+
+send "mount /dev/vda /root && chroot root \n"
+expect "#" 
+
+send "./untar.sh \n"
+expect {
+	"pagefaults" {
+    }
+
+    timeout {
+        exit -1
+    }
+}
+
+send "hackbench \n" 
+expect {
+	"Time:" {
+    }
+	
+    timeout {
+        exit -1
+    }
+
+}
+
+set timeout 1000
+
+send "./lmbench.sh \n"
+expect {
+	"Simple syscall" {
+        
+    }
+
+    timeout {
+        exit -1
+    }
+}
+
+puts "\nTest OK\n"
+
+send "\x01x"
+

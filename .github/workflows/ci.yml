@@ -1,0 +1,53 @@
+name: Daily Build
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: "0 0 * * *"
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  Test:
+
+    #runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64]
+    timeout-minutes: 10000000
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        token: ${{ secrets.PAT_TOKEN }}
+        clean: false
+    - name: Build
+      run: |
+        git submodule update --init --recursive
+        ./scripts/build/docker_exec_wrapper.sh ./scripts/build/build_qemu.sh
+        ./scripts/build/docker_exec_wrapper.sh ./scripts/build/build_host_linux.sh
+        ./scripts/build/docker_exec_wrapper.sh ./scripts/build/build_guest_linux.sh
+        ./scripts/build/docker_exec_wrapper.sh ./scripts/build/build_opensbi.sh
+        ./scripts/build/docker_exec_wrapper.sh ./scripts/build/build_duvisor.sh
+        ./scripts/build/copy_duvisor_to_vm.sh
+    - name: Unit Test
+      run: |
+        ./scripts/local/duvisor_test.sh
+        killall qemu-system-riscv64 || echo ""
+    - name: Single VM Test
+      run: |
+        killall qemu-system-riscv64 || echo ""
+        sleep 2
+        ./scripts/expect_wrapper.sh ./scripts/local/duvisor_test_standalone.exp
+        sleep 2
+        ./scripts/local/duvisor_test_network.sh
+        screen -wipe || echo ""
+        sleep 2
+        ./scripts/local/duvisor_test_multi_vcpu.sh
+    - name: Clean up
+      if: ${{ always() }}
+      run: |
+        sudo rm -r mnt || echo ""
+        sudo rm -r target || echo ""
+        sudo rm -r tests/integration/test_images/build || echo ""

@@ -1,0 +1,12 @@
+[submodule "qemu-duvisor"]
+	path = qemu-duvisor
+	url = https://github.com/IPADS-DuVisor/qemu-duvisor.git
+[submodule "linux-duvisor"]
+	path = linux-duvisor
+	url = https://github.com/IPADS-DuVisor/linux-duvisor.git
+[submodule "opensbi-duvisor"]
+	path = opensbi-duvisor
+	url = https://github.com/IPADS-DuVisor/opensbi-duvisor.git
+[submodule "test-files-duvisor"]
+	path = test-files-duvisor
+	url = https://github.com/IPADS-DuVisor/test-files-duvisor.git

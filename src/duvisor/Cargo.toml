@@ -1,0 +1,34 @@
+[package]
+name = "duvisor"
+version = "0.1.0"
+authors = ["Zeyu Mi <yzmizeyu@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clap = {version = "2.33.3", features = ["yaml"]}
+colored = "2"
+libc = ">=0.2.39"
+rusty-fork = "0.3.0"
+elf = "0.0.10"
+dtb = "0.2.0"
+once_cell = "1.8.0"
+epoll = "2.1.0"
+scopeguard = "0.3.3"
+
+byteorder = "1.2.1"
+devices = { path = "../devices" }
+sys_util = { path = "../sys_util" }
+irq_util = { path = "../irq_util" }
+atomic_enum = { path = "../atomic_enum" }
+vm-fdt = "0.2.0"
+fdt-rs = "0.4"
+
+[build-dependencies]
+gcc = "0.3"
+cc = "1.0"
+
+[features]
+qemu = []
+xilinx = []

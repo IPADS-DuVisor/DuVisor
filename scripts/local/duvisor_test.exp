@@ -1,0 +1,74 @@
+#!/usr/bin/expect -f
+source [file join [file dirname $argv0] ./duvisor_test_main.tcl]
+
+set timeout 180
+set env(TERM) xterm-256color
+set env(SHELL) /bin/bash
+set env(HOME) /home/gitlab-runner
+set env(PATH) /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+set env(LOGNAME) gitlab-runner
+set env(SHLVL) 2
+set env(MAIL) /var/mail/gitlab-runner
+set env(SUDO_UID) 1000
+set env(SUDO_GID) 1000
+set env(SUDO_COMMAND) /bin/bash
+
+# set args_for_duvisor_test [lindex $argv 0];
+
+spawn bash -c "killall qemu-system-riscv64"
+
+spawn bash -c "screen -r virt"
+
+send "./scripts/local/boot.sh \n"
+
+expect {
+    "Please press Enter to activate this console" {
+        send "\n ./chroot.sh \n
+        mount -t proc proc /proc \n
+        mount -t sysfs sysfs /sys \n
+        mount -t devtmpfs devtmpfs /dev \n"
+  #      echo 5 > /proc/sys/kernel/printk \n"
+        exp_continue
+    }
+
+    "root@(none)" {
+        send "cd duvisor && RUST_TEST_THREADS=1 ./run_tests.sh $argv\n"
+        expect {
+            "test failed" {
+                exit -1
+            }
+            "ALL TEST PASSED" {
+        
+            }
+            timeout {
+                exit -1
+            }
+        }
+    }
+    timeout {
+        send "\n"
+        expect {
+            "root@(none)" {
+                send "cd duvisor && RUST_TEST_THREADS=1 ./run_tests.sh $argv\n"
+                expect {
+                    "test failed" {
+                        exit -1
+                    }
+                    "ALL TEST PASSED" {
+
+                    }
+                    timeout {
+                        exit -1
+                    }
+                }
+            }
+            timeout {
+                exit -1
+            }
+        }
+    }
+}
+
+main_test
+
+puts "Test OK"

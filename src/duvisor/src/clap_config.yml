@@ -1,0 +1,69 @@
+name: DuVisor
+version: "1.0"
+about: A user-level hypervisor written in Rust for RISC-V
+args:
+    - vm_config:
+        long: config
+        value_name: CONFIG
+        help: Sets the path of a configuration file for this virtual machine, its contents will overwrite all other arguments
+    - machine:
+        long: machine
+        value_name: MACHINE
+        help: Sets the machine type of this virtual machine
+        possible_values: [ duvisor_virt, test_type]
+        conflicts_with:
+            - vm_config
+    - smp:
+        long: smp
+        value_name: SMP
+        help: Sets the number of virtual CPUs
+        conflicts_with:
+            - vm_config
+    - vmtap:
+        long: vmtap
+        value_name: VMTAP
+        help: Sets the name of the vmtap device
+        conflicts_with:
+            - vm_config
+    - block:
+        long: block
+        value_name: BLOCK
+        help: Sets the path of the block device
+        conflicts_with:
+            - vm_config
+    - console:
+        long: console
+        value_name: console
+        help: Sets the console for virtual mcahine
+        conflicts_with:
+            - vm_config
+    - memory:
+        long: memory
+        value_name: MEMORY
+        help: Sets the memory size of this virtual machine (in MegaBytes)
+        conflicts_with:
+            - vm_config
+    - kernel:
+        long: kernel
+        value_name: KERNEL_IMAGE_PATH
+        help: Sets the path of a kernel image file
+        conflicts_with:
+            - vm_config
+    - dtb:
+        long: dtb
+        value_name: DTB
+        help: Sets the path of a dtb file
+        conflicts_with:
+            - vm_config
+    - initrd:
+        long: initrd
+        value_name: INITRD
+        help: Sets the path of an initrd file
+        conflicts_with:
+            - vm_config
+    - append:
+        long: append
+        value_name: APPEND
+        help: Sets the path of an initrd file
+        conflicts_with:
+            - vm_config

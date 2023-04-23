@@ -1,0 +1,22 @@
+[package]
+name = "atomic_enum"
+version = "0.1.1"
+authors = ["Thomas Bächler <thomas@archlinux.org>"]
+edition = "2018"
+
+description = "An attribute to create an atomic wrapper around a C-style enum"
+repository = "https://github.com/brain0/atomic_enum"
+keywords = ["atomic", "enum"]
+categories = ["concurrency"]
+license = "MIT"
+
+[badges]
+maintenance = { status = "passively-maintained" }
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn = { version = "1.0.16", features = ["full"] }
+quote = "1.0.3"
+proc-macro2 = "1.0.9"
