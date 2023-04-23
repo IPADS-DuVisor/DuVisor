@@ -271,7 +271,7 @@ impl Worker {
         self.interrupt_status
             .fetch_or(INTERRUPT_STATUS_USED_RING as usize, Ordering::SeqCst);
         //self.interrupt_evt.write(1).unwrap();
-        self.irqchip.trigger_edge_irq(0x82);
+        self.irqchip.trigger_edge_irq(10 + 2);
     }
 
     fn run(&mut self, queue_evt: EventFd, kill_evt: EventFd) {

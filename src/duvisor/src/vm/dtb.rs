@@ -12,9 +12,9 @@ pub const INITRD_START: u64 = 0x853907f8;
 pub const INITRD_END: u64 = 0x87fffff8;
 pub const PLIC_HPA: u64 = 0xc000000;
 pub const PLIC_LENGTH: u64 = 0x4000000;
-pub const VIRT_SERIAL_IRQ: u64 = 0x81;
-pub const VIRT_BLOCK_IRQ: u64 = 0x82;
-pub const VIRT_NET_IRQ: u64 = 0x83;
+pub const VIRT_SERIAL_IRQ: u64 = 10 + 1;
+pub const VIRT_BLOCK_IRQ: u64 = 10 + 2;
+pub const VIRT_NET_IRQ: u64 = 10 + 3;
 
 #[allow(unused)]
 struct BusRegion {

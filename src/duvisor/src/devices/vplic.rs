@@ -1,9 +1,10 @@
 use libc;
 use std::ffi::CString;
+use core::arch::asm;
 
-pub const VPLIC_LENGTH: usize = 0x4000000;
+pub const VPLIC_LENGTH: usize = 0x1000;
 pub const VMODE_VPLIC_OFFSET: u64 = 0x1f00000;
-pub const VIRT_IRQ_OFFSET: u32 = 0x80;
+pub const VIRT_IRQ_OFFSET: u32 = 5;
 pub const NULLPTR: *mut libc::c_void = 0 as *mut libc::c_void;
 
 pub struct VPlic {
@@ -37,7 +38,7 @@ impl VPlic {
             );
             assert_ne!(vplic_base_addr, libc::MAP_FAILED);
             let vmode_vplic_addr =
-                (vplic_base_addr as u64 + VMODE_VPLIC_OFFSET) as *mut libc::c_void;
+                vplic_base_addr as *mut libc::c_void;
             let vplic_ptr = vmode_vplic_addr as *mut u32;
             return vplic_ptr;
         }
@@ -60,7 +61,9 @@ impl VPlic {
         let real_irq = irq - VIRT_IRQ_OFFSET;
         let ptr = self.pending_vector as *mut u32;
         unsafe {
-            *ptr = 1 << real_irq;
+            asm!("fence w,o");
+            *ptr = *ptr | (1 << real_irq);
+            asm!("fence w,o");
         }
     }
 }

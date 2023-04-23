@@ -138,7 +138,7 @@ pub struct VirtualMachine {
 
 impl VirtualMachine {
     fn open_ioctl() -> i32 {
-        let file_path = CString::new("/dev/dv_driver").unwrap();
+        let file_path = CString::new("/dev/laputa_dev").unwrap();
         let ioctl_fd;
 
         unsafe {

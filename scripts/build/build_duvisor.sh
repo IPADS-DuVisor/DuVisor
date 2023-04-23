@@ -46,11 +46,11 @@ cargo update
 rustup default stable
 rustup update
 rustup target add riscv64gc-unknown-linux-gnu
-RUSTFLAGS='-C target-feature=+crt-static' cargo build --target=riscv64gc-unknown-linux-gnu $build_level --features "qemu"
+RUSTFLAGS='-C target-feature=+crt-static' cargo build --target=riscv64gc-unknown-linux-gnu $build_level --features "xilinx"
 
 
 # get duvisor all the binary names
-RUSTFLAGS='-C target-feature=+crt-static' cargo test --no-run --target=riscv64gc-unknown-linux-gnu $build_level --features "qemu"
+RUSTFLAGS='-C target-feature=+crt-static' cargo test --no-run --target=riscv64gc-unknown-linux-gnu $build_level --features "xilinx"
 
 ## Build test images
 rm -r ./tests/integration/test_images/build

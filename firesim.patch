@@ -1,0 +1,230 @@
+diff --color -crB linux-5.11/arch/riscv/include/asm/smp.h linux-guest/arch/riscv/include/asm/smp.h
+*** linux-5.11/arch/riscv/include/asm/smp.h	2021-02-15 06:32:24.000000000 +0800
+--- linux-guest/arch/riscv/include/asm/smp.h	2023-04-20 14:28:33.451849851 +0800
+***************
+*** 111,114 ****
+--- 111,218 ----
+  }
+  #endif
+  
++ #ifdef CONFIG_VIPI
++ static inline
++ unsigned long rdvcpuid(void) {
++ #ifdef CONFIG_FIRESIM
++    register long vcpu_id asm("a0");
++ 
++    asm volatile ("\n"
++            ".option push\n"
++            ".option norvc\n"
++ 
++            /* rdvcpuid */
++            ".word 0xf8102577\n"
++ 
++            ".option pop"
++            : "=r"(vcpu_id)
++            :
++            : "memory");
++ 
++     return vcpu_id;
++ #endif
++ }
++ 
++ static inline
++ void wrvcpuid(unsigned long val) {
++ #ifdef CONFIG_FIRESIM
++    register long vcpu_id asm("a0") = val;
++ 
++    asm volatile ("\n"
++            ".option push\n"
++            ".option norvc\n"
++ 
++            /* wrvcpuid */
++            ".word 0xf8a01077\n"
++ 
++            ".option pop"
++            :
++            : "r"(vcpu_id)
++            : "memory");
++ #endif
++ }
++ 
++ static inline
++ void setvipi0(unsigned long val) {
++ #ifdef CONFIG_FIRESIM
++    register long vipi_id asm("a0") = val;
++ 
++    asm volatile ("\n"
++            ".option push\n"
++            ".option norvc\n"
++ 
++            /* set_vipi0 */
++            ".word 0xc8a03077\n"
++ 
++            ".option pop"
++            :
++            : "r"(vipi_id)
++            : "memory");
++ #endif
++ }
++ 
++ static inline
++ void clrvipi0(unsigned long val) {
++ #ifdef CONFIG_FIRESIM
++     /* FIXME: why ~val? */
++    register long vipi_id asm("a0") = ~val;
++ 
++    asm volatile ("\n"
++            ".option push\n"
++            ".option norvc\n"
++ 
++            /* clr_vipi0 */
++            ".word 0xc8a02077\n"
++            /* clr_vipi0 */
++            ".word 0xc8a02077\n"
++ 
++            ".option pop"
++            :
++            : "r"(vipi_id)
++            : "memory");
++ #endif
++ }
++ 
++ static inline
++ unsigned long rdvipi0(void) {
++ #ifdef CONFIG_FIRESIM
++    register long vipi_id asm("a0");
++ 
++    asm volatile ("\n"
++            ".option push\n"
++            ".option norvc\n"
++ 
++            /* rdvipi0 */
++            ".word 0xc8101577\n"
++ 
++            ".option pop"
++            : "=r"(vipi_id)
++            :
++            : "memory");
++ 
++     return vipi_id;
++ #endif
++ }
++ #endif
++ 
+  #endif /* _ASM_RISCV_SMP_H */
+diff --color -crB linux-5.11/arch/riscv/kernel/sbi.c linux-guest/arch/riscv/kernel/sbi.c
+*** linux-5.11/arch/riscv/kernel/sbi.c	2021-02-15 06:32:24.000000000 +0800
+--- linux-guest/arch/riscv/kernel/sbi.c	2023-04-20 15:05:33.003677584 +0800
+***************
+*** 111,117 ****
+--- 111,119 ----
+   */
+  void sbi_clear_ipi(void)
+  {
++ #ifndef CONFIG_VIPI
+  	sbi_ecall(SBI_EXT_0_1_CLEAR_IPI, 0, 0, 0, 0, 0, 0, 0);
++ #endif
+  }
+  EXPORT_SYMBOL(sbi_clear_ipi);
+  
+***************
+*** 553,559 ****
+--- 555,568 ----
+  
+  	riscv_cpuid_to_hartid_mask(target, &hartid_mask);
+  
++ #ifdef CONFIG_VIPI
++     unsigned long cpuid;
++     for_each_cpu(cpuid, &hartid_mask) {
++         setvipi0(1 << (cpuid + 1));
++     }
++ #else
+  	sbi_send_ipi(cpumask_bits(&hartid_mask));
++ #endif
+  }
+  
+  static struct riscv_ipi_ops sbi_ipi_ops = {
+diff --color -crB linux-5.11/drivers/irqchip/irq-riscv-intc.c linux-guest/drivers/irqchip/irq-riscv-intc.c
+*** linux-5.11/drivers/irqchip/irq-riscv-intc.c	2021-02-15 06:32:24.000000000 +0800
+--- linux-guest/drivers/irqchip/irq-riscv-intc.c	2023-04-20 14:38:13.395268482 +0800
+***************
+*** 16,27 ****
+--- 16,33 ----
+  #include <linux/module.h>
+  #include <linux/of.h>
+  #include <linux/smp.h>
++ #ifdef CONFIG_VIPI
++ #include <asm/sbi.h>
++ #endif
+  
+  static struct irq_domain *intc_domain;
+  
+  static asmlinkage void riscv_intc_irq(struct pt_regs *regs)
+  {
+  	unsigned long cause = regs->cause & ~CAUSE_IRQ_FLAG;
++ #ifdef CONFIG_VIPI
++     int cpuid;
++ #endif
+  
+  	if (unlikely(cause >= BITS_PER_LONG))
+  		panic("unexpected interrupt cause");
+***************
+*** 29,34 ****
+--- 35,44 ----
+  	switch (cause) {
+  #ifdef CONFIG_SMP
+  	case RV_IRQ_SOFT:
++ #ifdef CONFIG_VIPI
++         cpuid = rdvcpuid() - 1;
++         clrvipi0(1 << (cpuid + 1));
++ #endif
+  		/*
+  		 * We only use software interrupts to pass IPIs, so if a
+  		 * non-SMP system gets one, then we don't know what to do.
+diff --color -crB linux-5.11/drivers/irqchip/irq-sifive-plic.c linux-guest/drivers/irqchip/irq-sifive-plic.c
+*** linux-5.11/drivers/irqchip/irq-sifive-plic.c	2021-02-15 06:32:24.000000000 +0800
+--- linux-guest/drivers/irqchip/irq-sifive-plic.c	2023-04-20 14:39:33.445471882 +0800
+***************
+*** 273,278 ****
+--- 273,281 ----
+  	return 0;
+  }
+  
++ #ifdef CONFIG_VIPI
++ #define VINTERRUPTS_IRQ_OFFSET 10
++ #endif
+  static int __init plic_init(struct device_node *node,
+  		struct device_node *parent)
+  {
+***************
+*** 364,370 ****
+--- 367,378 ----
+  			priv->regs + ENABLE_BASE + i * ENABLE_PER_HART;
+  		handler->priv = priv;
+  done:
++ #ifdef CONFIG_VIPI
++ 		for (hwirq = 1 + VINTERRUPTS_IRQ_OFFSET;
++                 hwirq <= nr_irqs + VINTERRUPTS_IRQ_OFFSET; hwirq++)
++ #else
+  		for (hwirq = 1; hwirq <= nr_irqs; hwirq++)
++ #endif
+  			plic_toggle(handler, hwirq, 0);
+  		nr_handlers++;
+  	}
+diff --color -crB linux-5.11/Kconfig linux-guest/Kconfig
+*** linux-5.11/Kconfig	2021-02-15 06:32:24.000000000 +0800
+--- linux-guest/Kconfig	2023-04-20 14:20:55.683170980 +0800
+***************
+*** 30,32 ****
+--- 30,40 ----
+  source "lib/Kconfig.debug"
+  
+  source "Documentation/Kconfig"
++ 
++ config VIPI
++     bool "Use exitless virtual IPI"
++     default y
++ 
++ config FIRESIM
++     bool "Compile for firesim"
++     default y

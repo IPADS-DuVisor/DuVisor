@@ -37,7 +37,7 @@ impl VirtualInterrupt {
     pub fn flush_pending_irq(&self) {
         /* Leave IRQ_U_SOFT for hardware UIPI */
         let pending = self.irq_pending.load(Ordering::SeqCst);
-        for i in 1..9 {
+        for i in 4..9 {
             if (pending & (1 << i)) != 0 {
                 unsafe {
                     csrs!(HUVIP, 1 << i);

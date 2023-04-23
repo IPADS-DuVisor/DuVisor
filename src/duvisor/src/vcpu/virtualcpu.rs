@@ -522,7 +522,7 @@ impl VirtualCpu {
         // if (fault_addr >= PLIC_HPA + 0x1f00000) && (fault_addr < PLIC_HPA + 0x1f00000 + 8) {
         if (fault_addr >= PLIC_HPA) && (fault_addr < PLIC_HPA + PLIC_LENGTH) {
             let addr = fault_addr - (fault_addr % 0x1000);
-            gsmmu.map_page(addr, addr, PTE_VRWEU);
+            gsmmu.map_page(addr, addr, PTE_VRWEU | PTE_DIRTY | PTE_ACCESS);
 
             // let mut addr = PLIC_HPA;
             // while addr < PLIC_HPA + PLIC_LENGTH {

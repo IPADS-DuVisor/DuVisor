@@ -68,7 +68,7 @@ impl Worker {
         self.interrupt_status
             .fetch_or(INTERRUPT_STATUS_USED_RING as usize, Ordering::SeqCst);
         //self.interrupt_evt.write(1).unwrap();
-        self.irqchip.trigger_edge_irq(0x83);
+        self.irqchip.trigger_edge_irq(10 + 3);
     }
 
     // Copies a single frame from `self.rx_buf` into the guest. Returns true

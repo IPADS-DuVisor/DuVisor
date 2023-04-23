@@ -157,7 +157,7 @@ impl Serial {
 
     fn trigger_interrupt(&mut self) -> Result<()> {
         // self.interrupt_evt.write(1)
-        self.irqchip.trigger_edge_irq(0x81);
+        self.irqchip.trigger_edge_irq(10 + 1);
         Ok(())
     }
 

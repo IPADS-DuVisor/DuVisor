@@ -553,6 +553,9 @@ impl GStageMmu {
             *pte_addr_ptr = pte;
         }
 
+        unsafe {
+            hufence_gvma_all();
+        }
         Some(0)
     }
 
