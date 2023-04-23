@@ -9,6 +9,13 @@
       * [Build DuVisor for QEMU](#build-duvisor-for-qemu)
       * [Run Example VM on QEMU](#run-example-vm-on-qemu)
       * [Build DuVisor for FireSim](#build-duvisor-for-firesim)
+      * [Security Evaluation for DuVisor](#security-evaluation-for-duvisor)
+         * [<a href="https://nvd.nist.gov/vuln/detail/CVE-2017-12188" rel="nofollow">CVE-2017-12188 Memory Virtualization</a>](#cve-2017-12188-memory-virtualization)
+         * [<a href="https://nvd.nist.gov/vuln/detail/CVE-2018-16882" rel="nofollow">CVE-2018-16882 Interrupt Virtualization</a>](#cve-2018-16882-interrupt-virtualization)
+         * [<a href="https://nvd.nist.gov/vuln/detail/CVE-2016-8630" rel="nofollow">CVE-2016-8630 ISA Emulation</a>](#cve-2016-8630-isa-emulation)
+         * [<a href="https://nvd.nist.gov/vuln/detail/CVE-2020-8834" rel="nofollow">CVE-2020-8834 VM Exit Handling</a>](#cve-2020-8834-vm-exit-handling)
+         * [<a href="https://nvd.nist.gov/vuln/detail/CVE-2016-5412" rel="nofollow">CVE-2016-5412 Para-Virtualization</a>](#cve-2016-5412-para-virtualization)
+         * [<a href="https://nvd.nist.gov/vuln/detail/CVE-2019-6974" rel="nofollow">CVE-2019-6974 Device Virtualization</a>](#cve-2019-6974-device-virtualization)
 <!--te-->
 
 ## Quick Start
