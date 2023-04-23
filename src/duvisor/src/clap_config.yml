@@ -10,7 +10,7 @@ args:
         long: machine
         value_name: MACHINE
         help: Sets the machine type of this virtual machine
-        possible_values: [ duvisor_virt, test_type]
+        possible_values: [ duvisor_virt, test_type, duvisor_cve1, duvisor_cve2, duvisor_cve3, duvisor_cve4, duvisor_cve5, duvisor_cve6]
         conflicts_with:
             - vm_config
     - smp:

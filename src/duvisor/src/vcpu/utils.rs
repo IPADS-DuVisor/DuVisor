@@ -401,3 +401,23 @@ macro_rules! csrci {
         }
     }};
 }
+
+#[cfg(feature = "cve")]
+pub unsafe fn inject_use_after_free() {
+    unsafe {
+        /* (*a) = b, *(*a) = (*b) = c */
+        let c: u64 = 1;
+        let mut b = &c as *const u64 as u64;
+        let a = &b as *const u64 as u64;
+        assert_eq!(*(*(a as *mut u64) as *mut u64), c);
+
+        /* Free b */
+        b = 0;
+        drop(b);
+
+        /* Access c from a, should panic */
+        assert_eq!(*(*(a as *mut u64) as *mut u64), c);
+
+        /* panic!("Emulating use-after-free (unexpected)!"); */
+    }
+}

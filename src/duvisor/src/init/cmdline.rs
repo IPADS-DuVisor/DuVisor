@@ -5,6 +5,19 @@ use std::path::Path;
 use clap::App;
 
 pub const MAX_VCPU: u32 = 8;
+#[cfg(feature = "cve")]
+pub static mut CVE_MODE: i32 = 0;
+#[cfg(feature = "cve")]
+pub mod cve_mode {
+    pub const CVE_MEMORY_VIRTUALIZATION: i32 = 0x1;
+    pub const CVE_INTERRUPT_VIRTUALIZATION: i32 = 0x2;
+    pub const CVE_ISA_EMULATION: i32 = 0x3;
+    pub const CVE_VM_EXIT: i32 = 0x4;
+    pub const CVE_PARA_VIRTUALIZATION: i32 = 0x5;
+    pub const CVE_DEVICE_VIRTUALIZATION: i32 = 0x6;
+}
+#[cfg(feature = "cve")]
+use self::cve_mode::*;
 
 pub struct VMConfig {
     vcpu_count: u32,
@@ -283,6 +296,7 @@ impl VMConfig {
             return false;
         }
 
+        #[cfg(not(feature = "cve"))]
         if vm_config.machine_type != "duvisor_virt" && vm_config.machine_type != "test_type" {
             eprintln!(
                 "{} failed to set machine_type for {}",
@@ -290,6 +304,42 @@ impl VMConfig {
                 vm_config.machine_type
             );
             return false;
+        }
+
+        #[cfg(feature = "cve")]
+        if vm_config.machine_type != "duvisor_virt" && vm_config.machine_type != "test_type" {
+            if vm_config.machine_type == "duvisor_cve1" {
+                unsafe {
+                    CVE_MODE = CVE_MEMORY_VIRTUALIZATION;
+                }
+            } else if vm_config.machine_type == "duvisor_cve2" {
+                unsafe {
+                    CVE_MODE = CVE_INTERRUPT_VIRTUALIZATION;
+                }
+            } else if vm_config.machine_type == "duvisor_cve3" {
+                unsafe {
+                    CVE_MODE = CVE_ISA_EMULATION;
+                }
+            } else if vm_config.machine_type == "duvisor_cve4" {
+                unsafe {
+                    CVE_MODE = CVE_VM_EXIT;
+                }
+            } else if vm_config.machine_type == "duvisor_cve5" {
+                unsafe {
+                    CVE_MODE = CVE_PARA_VIRTUALIZATION;
+                }
+            } else if vm_config.machine_type == "duvisor_cve6" {
+                unsafe {
+                    CVE_MODE = CVE_DEVICE_VIRTUALIZATION;
+                }
+            } else {
+                eprintln!(
+                    "{} failed to set machine_type for {}",
+                    "error:".bright_red(),
+                    vm_config.machine_type
+                );
+                return false;
+            }
         }
 
         if !Path::new(&vm_config.kernel_img_path).is_file() {

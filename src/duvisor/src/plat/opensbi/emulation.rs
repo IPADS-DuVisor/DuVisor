@@ -1,5 +1,9 @@
 use crate::csrw;
 use crate::dbgprintln;
+#[cfg(feature = "cve")]
+use crate::init::cmdline::cve_mode::CVE_PARA_VIRTUALIZATION;
+#[cfg(feature = "cve")]
+use crate::init::cmdline::CVE_MODE;
 use crate::init::cmdline::MAX_VCPU;
 use crate::irq::delegation::delegation_constants::*;
 use crate::irq::vipi::VirtualIpi;
@@ -149,6 +153,21 @@ impl Ecall {
                 }
                 dbgprintln!("set vtimer for ulh");
                 ret = 0;
+
+                #[cfg(feature = "cve")]
+                unsafe {
+                    if CVE_MODE == CVE_PARA_VIRTUALIZATION {
+                        static mut CNT: u64 = 0;
+                        CNT += 1;
+
+                        /* Boot a 1-core VM has about 300 vtimer-settings */
+
+                        if CNT > 300 {
+                            /* Wait about 2 seconds */
+                            panic!("Emulating CVE-2016-5412 (infinite loop) in para-virtualization!");
+                        }
+                    }
+                }
             }
             SBI_EXT_0_1_CONSOLE_PUTCHAR => {
                 ret = self.console_putchar();

@@ -36,6 +36,7 @@ ROOTFS_DIR=$PREPARE/rootfs
 rm -rf $ROOTFS_DIR/_install/duvisor
 mkdir -p $ROOTFS_DIR/_install/duvisor
 cp $duvisor_name $ROOTFS_DIR/_install/duvisor/
+cp $duvisor_name-cve $ROOTFS_DIR/_install/duvisor/
 cp $PREPARE/rootfs-guest.img $ROOTFS_DIR/_install/duvisor
 cp ./linux-guest/arch/riscv/boot/Image $ROOTFS_DIR/_install/duvisor
 
@@ -50,7 +51,19 @@ echo '#!/bin/bash
 --append "root=/dev/ram console=ttyS0 earlycon=sbi"
 ' > $ROOTFS_DIR/_install/duvisor/boot.sh
 
+echo '#!/bin/bash
+./duvisor-cve \
+--smp 1 \
+--initrd \
+./rootfs-guest.img \
+--kernel ./Image \
+--memory 4096 \
+--machine duvisor_cve$1 \
+--append "root=/dev/ram console=ttyS0 earlycon=sbi"
+' > $ROOTFS_DIR/_install/duvisor/boot-cve.sh
+
 chmod +x $ROOTFS_DIR/_install/duvisor/boot.sh
+chmod +x $ROOTFS_DIR/_install/duvisor/boot-cve.sh
 
 pushd $ROOTFS_DIR/_install
 find ./ | cpio -o -H newc > ../../rootfs-host.img

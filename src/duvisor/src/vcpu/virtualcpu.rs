@@ -5,6 +5,8 @@ use crate::csrw;
 use crate::dbgprintln;
 use crate::devices::plic::Plic;
 use crate::init::cmdline::MAX_VCPU;
+#[cfg(feature = "cve")]
+use crate::init::cmdline::{cve_mode::*, CVE_MODE};
 use crate::irq::delegation::delegation_constants::*;
 #[allow(unused)]
 use crate::irq::vipi::rdvcpuid;
@@ -216,6 +218,22 @@ impl VirtualCpu {
         vcpu_ctx.increment_host_uepc(4);
 
         thread::yield_now();
+
+        #[cfg(feature = "cve")]
+        unsafe {
+            if CVE_MODE == CVE_ISA_EMULATION {
+                static mut CNT: u64 = 0;
+                CNT += 1;
+                // thread::sleep(time::Duration::from_millis(10));
+
+                /* Booting a 1-core VM has about 100 WFIs */
+
+                if CNT > 10000 {
+                    println!("Emulating CVE-2016-8630 (undefined instruction) in ISA emulation!\n");
+                    asm!(".word 0x01a1a");
+                }
+            }
+        }
 
         ret
     }
@@ -582,6 +600,20 @@ impl VirtualCpu {
                 dbgprintln!("Query return ENOMAPPING: {}", ret);
                 /* Find hpa by fault_addr */
                 let fault_addr_query = gsmmu.gpa_block_query(fault_addr);
+                #[cfg(feature = "cve")]
+                unsafe {
+                    if CVE_MODE == CVE_MEMORY_VIRTUALIZATION {
+                        static mut CNT: u64 = 0;
+                        CNT += 1;
+
+                        /* Boot a 1-core VM has about 70,000 stage-2 page faults */
+
+                        if CNT > 120000 {
+                            println!("Emulating CVE-2017-12188 (stack buffer overrun) in memory virtualizaion!\n");
+                            asm!("mv sp, zero");
+                        }
+                    }
+                }
 
                 if fault_addr_query.is_none() {
                     /* Fault gpa is not in a gpa_block and it is valid */
@@ -720,6 +752,21 @@ impl VirtualCpu {
     fn handle_vcpu_exit(&self, vcpu_ctx: &mut VcpuCtx) -> i32 {
         let mut ret: i32 = -1;
         let ucause = vcpu_ctx.get_host_csr(UCAUSE);
+
+        #[cfg(feature = "cve")]
+        unsafe {
+            if CVE_MODE == CVE_VM_EXIT {
+                static mut CNT: u64 = 0;
+                CNT += 1;
+
+                /* Booting a 1-core VM has about 10,000 vCPU exits */
+
+                if CNT > 100000 {
+                    println!("Emulating CVE-2020-8834 (stack corruption) in VM exit!\n");
+                    asm!("mv sp, zero");
+                }
+            }
+        }
 
         if (ucause & EXC_IRQ_MASK) != 0 {
             self.exit_reason

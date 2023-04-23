@@ -2,6 +2,8 @@ use crate::csrr;
 use crate::dbgprintln;
 use crate::devices::plic::Plic;
 use crate::init::cmdline::VMConfig;
+#[cfg(feature = "cve")]
+use crate::init::cmdline::{cve_mode::*, CVE_MODE};
 use crate::irq::delegation::delegation_constants;
 use crate::irq::vipi::VirtualIpi;
 use crate::mm::gparegion::GpaRegion;
@@ -157,10 +159,19 @@ impl VirtualMachine {
     ) -> Arc<Mutex<devices::Serial>> {
         let serial_evt = EventFd::new().unwrap();
 
+        #[cfg(not(feature = "cve"))]
         let mmio_serial = Arc::new(Mutex::new(devices::Serial::new_out(
             serial_evt.try_clone().unwrap(),
             Box::new(stdout()),
             irqchip.clone(),
+        )));
+
+        #[cfg(feature = "cve")]
+        let mmio_serial = Arc::new(Mutex::new(devices::Serial::new_out(
+            serial_evt.try_clone().unwrap(),
+            Box::new(stdout()),
+            irqchip.clone(),
+            unsafe { CVE_MODE } == CVE_DEVICE_VIRTUALIZATION,
         )));
 
         mmio_bus

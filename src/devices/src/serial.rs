@@ -67,6 +67,8 @@ pub struct Serial {
     out: Option<Box<dyn io::Write + Send>>,
 
     irqchip: Arc<dyn IrqChip>,
+    #[cfg(feature = "cve")]
+    cve: bool,
 }
 
 impl Serial {
@@ -85,13 +87,25 @@ impl Serial {
             in_buffer: VecDeque::new(),
             out: out,
             irqchip,
+            #[cfg(feature = "cve")]
+            cve: false
         }
     }
 
     /// Constructs a Serial port ready for output.
+    #[cfg(not(feature = "cve"))]
     pub fn new_out(interrupt_evt: EventFd, out: Box<dyn io::Write + Send>,
         irqchip: Arc<dyn IrqChip>) -> Serial {
         Self::new(interrupt_evt, Some(out), irqchip.clone())
+    }
+
+    /// Constructs a Serial port ready for output.
+    #[cfg(feature = "cve")]
+    pub fn new_out(interrupt_evt: EventFd, out: Box<dyn io::Write + Send>,
+        irqchip: Arc<dyn IrqChip>, cve: bool) -> Serial {
+        let mut serial = Self::new(interrupt_evt, Some(out), irqchip.clone());
+        serial.cve = cve;
+        serial
     }
 
     /// Constructs a Serial port with no connected output.
@@ -181,6 +195,40 @@ impl Serial {
                     }
                 } else {
                     if let Some(out) = self.out.as_mut() {
+                        #[cfg(feature = "cve")]
+                        unsafe {
+                            if self.cve {
+                            /* Output "DV-cve" */
+                                static mut STATE:u64 = 0;
+                                STATE = match STATE {
+                                    0 => {
+                                        if v == 68 { 1 } else { 0 }
+                                    },
+                                    1 => {
+                                        if v == 86 { 2 } else { 0 }
+                                    },
+                                    2 => {
+                                        if v == 45 { 3 } else { 0 }
+                                    },
+                                    3 => {
+                                        if v == 99 { 4 } else { 0 }
+                                    },
+                                    4 => {
+                                        if v == 118 { 5 } else { 0 }
+                                    },
+                                    5 => {
+                                        if v == 101 { 6 } else { 0 }
+                                    },
+                                    _ => {
+                                        0
+                                    }
+                                };
+                                if STATE == 6 {
+                                    println!("Emulating CVE-2019-6974 (use-after-free) in device virtualization!\n");
+                                    inject_use_after_free();
+                                }
+                            }
+                        }
                         out.write_all(&[v])?;
                         out.flush()?;
                     }
@@ -236,5 +284,25 @@ impl BusDevice for Serial {
             SCR => self.scratch,
             _ => 0,
         };
+    }
+}
+
+#[cfg(feature = "cve")]
+unsafe fn inject_use_after_free() {
+    unsafe {
+        /* (*a) = b, *(*a) = (*b) = c */
+        let c: u64 = 1;
+        let mut b = &c as *const u64 as u64;
+        let a = &b as *const u64 as u64;
+        assert_eq!(*(*(a as *mut u64) as *mut u64), c);
+
+        /* Free b */
+        b = 0;
+        drop(b);
+
+        /* Access c from a, should panic */
+        assert_eq!(*(*(a as *mut u64) as *mut u64), c);
+
+        /* panic!("Emulating use-after-free (unexpected)!"); */
     }
 }

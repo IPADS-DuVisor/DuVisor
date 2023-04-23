@@ -43,7 +43,7 @@ mkdir -p mnt
 sudo mount $PREPARE/ubuntu-vdisk.img ./mnt
 sudo rm -r ./mnt/duvisor
 sudo mkdir -p ./mnt/duvisor/tests_bin
-sudo cp scripts/local/run_tests.sh $duvisor_name ./mnt/duvisor
+sudo cp scripts/local/run_tests.sh $duvisor_name ${duvisor_name}-cve ./mnt/duvisor
 sudo cp $duvisor_test_names ./mnt/duvisor/tests_bin/
 sudo cp -r src ./mnt/duvisor/
 sudo cp -r tests ./mnt/duvisor/

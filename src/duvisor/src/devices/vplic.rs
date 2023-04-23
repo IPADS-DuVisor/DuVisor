@@ -1,3 +1,7 @@
+#[cfg(feature = "cve")]
+use crate::init::cmdline::{cve_mode::CVE_INTERRUPT_VIRTUALIZATION, CVE_MODE};
+#[cfg(feature = "cve")]
+use crate::vcpu::utils::inject_use_after_free;
 use libc;
 use std::ffi::CString;
 
@@ -61,6 +65,22 @@ impl VPlic {
         let ptr = self.pending_vector as *mut u32;
         unsafe {
             *ptr = 1 << real_irq;
+        }
+
+        #[cfg(feature = "cve")]
+        unsafe {
+            if CVE_MODE == CVE_INTERRUPT_VIRTUALIZATION {
+                static mut CNT: u64 = 0;
+                CNT += 1;
+
+                /* Booting a 1-core VM has about 100 posted interrupts */
+
+                if CNT > 400 {
+                    println!("Emulating CVE-2018-16882 (use-after-free) in posted interrupt!");
+                    inject_use_after_free();
+                    // panic!("Emulating CVE in posted interrupt!");
+                }
+            }
         }
     }
 }

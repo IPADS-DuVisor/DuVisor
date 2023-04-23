@@ -46,6 +46,8 @@ cargo update
 rustup default stable
 rustup update
 rustup target add riscv64gc-unknown-linux-gnu
+RUSTFLAGS='-C target-feature=+crt-static' cargo build --target=riscv64gc-unknown-linux-gnu $build_level --features "cve"
+mv ./target/riscv64gc-unknown-linux-gnu/${build_path}/duvisor ./target/riscv64gc-unknown-linux-gnu/${build_path}/duvisor-cve
 RUSTFLAGS='-C target-feature=+crt-static' cargo build --target=riscv64gc-unknown-linux-gnu $build_level --features "qemu"
 
 

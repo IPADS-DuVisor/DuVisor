@@ -13,3 +13,6 @@ net_sys = { path = "../net_sys" }
 sys_util = { path = "../sys_util" }
 virtio_sys = { path = "../virtio_sys" }
 irq_util = { path = "../irq_util" }
+
+[features]
+cve = []
