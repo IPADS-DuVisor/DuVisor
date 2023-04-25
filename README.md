@@ -4,6 +4,8 @@
 
 <!--ts-->
 * [DuVisor](#duvisor)
+   * [Why DuVisor](#why-duvisor)
+   * [Duvisor's Architecture](#duvisors-architecture)
    * [Quick Start](#quick-start)
       * [Prerequisite](#prerequisite)
       * [Build DuVisor for QEMU](#build-duvisor-for-qemu)
