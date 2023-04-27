@@ -4,6 +4,8 @@
 
 <!--ts-->
 * [DuVisor](#duvisor)
+   * [Why DuVisor](#why-duvisor)
+   * [Duvisor's Architecture](#duvisors-architecture)
    * [Quick Start](#quick-start)
       * [Prerequisite](#prerequisite)
       * [Build DuVisor for QEMU](#build-duvisor-for-qemu)
@@ -17,6 +19,42 @@
          * [<a href="https://nvd.nist.gov/vuln/detail/CVE-2016-5412" rel="nofollow">CVE-2016-5412 Para-Virtualization</a>](#cve-2016-5412-para-virtualization)
          * [<a href="https://nvd.nist.gov/vuln/detail/CVE-2019-6974" rel="nofollow">CVE-2019-6974 Device Virtualization</a>](#cve-2019-6974-device-virtualization)
 <!--te-->
+
+<img src="./figures/logo-color.png" width="400px" />
+
+DuVisor is a user-level hypervisor based on delegated virtualization.
+
+<img src="./figures/arch3.png" width="600px" />
+
+## Why DuVisor
+
+Compared with the traditional virtualization, DuVisor has the following advantages.
+
+1. High Security: A deprivileged hypervisor eliminates the kernel’s attack surface introduced by virtualization. The one-to-one service model further enhances the isolation between VMs and the fault tolerance of the entire system.
+
+2. Near-native Performance: Getting rid of redundant mode switching completely unleash the potential performance of virtualization. The integrated design further enhances the cooperation between modules to make the code more efficient.
+
+3. Agile Development: Benefit from the thriving software environment in user space, DuVisor is no longer restricted by the kernel development environment and can freely choose the programming language and existing libraries. The project currently uses Rust to ensure security and takes advantage of the powerful testing framework it provides to improve the quality of the project.
+
+4. Flexible Operations and Maintenance: DuVisor can be upgraded without rebooting the host system. New features and functionalities can be deployed more quickly. Cloud services will have better fault tolerance benefiting from DuVisor's strong isolation.
+
+## Duvisor's Architecture
+
+DuVisor serves VMs directly in user space with a one-to-one model to bring greater isolation to the entire system.
+
+<img src="./figures/arch-all.png" width="600px" />
+
+With a seperate hypervisor process that serves only itself, a VM gains stronger isolation from other VMs and DuVisor processes. The host kernel is also free from the hypervisor's security vulnerabilities.
+
+<img src="./figures/arch-isol.png" width="600px" />
+
+All data interactions between the VM and the hypervisor are no longer intervened by the host kernel as in traditional virtualization. DuVisor can directly handle the traps from VMs in a more integrated way, which reduces complexity while boosting the performance. 
+
+DuVisor relies on a new hardware extension called HU-Ext to catch VM exits directly in user space. The hardware extension imports VM exits directly into the user state and provides virtualization-related registers to the user-level software to access VM states and control VM behaviors.
+
+<img src="./figures/arch-data.png" width="600px" />
+
+DuVisor is developed in user space making it more flexible than kernel modules. For example, it uses the Rust language to build the main functionalities and thus obtains great security. At the same time, DuVisor is also able to quickly reuse rich off-the-shelf projects, such as Firecracker's I/O backend.
 
 ## Quick Start
 
