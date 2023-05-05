@@ -13,11 +13,11 @@
       * [Build DuVisor for FireSim](#build-duvisor-for-firesim)
 <!--te-->
 
-<img src="./figures/logo-color.png" width="400px" />
+<img src="./figures/logo-color-dark.png" width="400px" />
 
 DuVisor is a user-level hypervisor based on delegated virtualization.
 
-<img src="./figures/arch3.png" width="600px" />
+<img src="./figures/arch3-dark.png" width="600px" />
 
 ## Why DuVisor
 
@@ -35,17 +35,17 @@ Compared with the traditional virtualization, DuVisor has the following advantag
 
 DuVisor serves VMs directly in user space with a one-to-one model to bring greater isolation to the entire system.
 
-<img src="./figures/arch-all.png" width="600px" />
+<img src="./figures/arch-all-dark.png" width="600px" />
 
 With a seperate hypervisor process that serves only itself, a VM gains stronger isolation from other VMs and DuVisor processes. The host kernel is also free from the hypervisor's security vulnerabilities.
 
-<img src="./figures/arch-isol.png" width="600px" />
+<img src="./figures/arch-isol-dark.png" width="400px" />
 
 All data interactions between the VM and the hypervisor are no longer intervened by the host kernel as in traditional virtualization. DuVisor can directly handle the traps from VMs in a more integrated way, which reduces complexity while boosting the performance. 
 
-DuVisor relies on a new hardware extension called HU-Ext to catch VM exits directly in user space. The hardware extension imports VM exits directly into the user state and provides virtualization-related registers to the user-level software to access VM states and control VM behaviors.
+DuVisor relies on a new hardware extension called DV-Ext to catch VM exits directly in user space. The hardware extension imports VM exits directly into the user state and provides virtualization-related registers to the user-level software to access VM states and control VM behaviors.
 
-<img src="./figures/arch-data.png" width="600px" />
+<img src="./figures/arch-data-dark.png" width="400px" />
 
 DuVisor is developed in user space making it more flexible than kernel modules. For example, it uses the Rust language to build the main functionalities and thus obtains great security. At the same time, DuVisor is also able to quickly reuse rich off-the-shelf projects, such as Firecracker's I/O backend.
 
