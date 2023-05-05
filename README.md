@@ -17,7 +17,7 @@
 
 DuVisor is a user-level hypervisor based on delegated virtualization.
 
-<img src="./figures/arch-dark.png" width="600px" />
+<img src="./figures/arch-dv.png" width="600px" />
 
 ## Why DuVisor
 
