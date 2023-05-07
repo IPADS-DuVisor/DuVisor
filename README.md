@@ -1,6 +1,6 @@
-<img src="./figures/logo-large.png" width="450px" />
+<img src="./figures/logo-long.png" width="450px" />
 
-DuVisor is a user-level hypervisor based on delegated virtualization. It deprivileges all the vulnerable subsystems of traditional hypervisors into user space, reducing the host kernel’s attack surface and preventing any of hypervisor's vulnerabilities from jeopardizing it. The Rust language further ensures the security and reliability of DuVisor.
+DuVisor is a user-level hypervisor with high performance based on delegated virtualization. It deprivileges all the vulnerable subsystems of traditional hypervisors into user space, reducing the host kernel’s attack surface and preventing any of hypervisor's vulnerabilities from jeopardizing it. The Rust language further ensures the security and reliability.
 
 # DuVisor
 
