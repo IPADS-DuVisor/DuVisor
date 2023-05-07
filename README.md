@@ -1,6 +1,12 @@
+<img src="./figures/logo-long.png" width="450px" />
+
+DuVisor is a user-level hypervisor with high performance based on delegated virtualization. It deprivileges all the vulnerable subsystems of traditional hypervisors into user space, reducing the host kernel’s attack surface and preventing any of hypervisor's vulnerabilities from jeopardizing it. The Rust language and one-to-one model further ensures the isolation and reliability.
+
 # DuVisor
 
 [![ci-status](https://github.com/IPADS-DuVisor/DuVisor/actions/workflows/ci.yml/badge.svg)](https://github.com/IPADS-DuVisor/DuVisor/actions/)[![rust-version](https://img.shields.io/badge/rustc-stable-blue.svg)](https://blog.rust-lang.org/)
+
+<img src="./figures/arch-duvisor.png" width="600px" />
 
 <!--ts-->
 * [DuVisor](#duvisor)
@@ -19,12 +25,6 @@
          * [<a href="https://nvd.nist.gov/vuln/detail/CVE-2016-5412" rel="nofollow">CVE-2016-5412 Para-Virtualization</a>](#cve-2016-5412-para-virtualization)
          * [<a href="https://nvd.nist.gov/vuln/detail/CVE-2019-6974" rel="nofollow">CVE-2019-6974 Device Virtualization</a>](#cve-2019-6974-device-virtualization)
 <!--te-->
-
-<img src="./figures/logo-color-dark.png" width="400px" />
-
-DuVisor is a user-level hypervisor based on delegated virtualization.
-
-<img src="./figures/arch-dv.png" width="600px" />
 
 ## Why DuVisor
 
