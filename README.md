@@ -258,7 +258,7 @@ All the following CVEs can be tested without rebooting or shutting down the host
 
 ```bash
 # Boot host kernel
-./scripts/run/example-boot.sh
+./scripts/run/example_boot.sh
 
 # Enter the directory storing the scripts
 cd duvisor
