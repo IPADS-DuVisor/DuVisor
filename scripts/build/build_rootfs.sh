@@ -5,7 +5,7 @@
 export ARCH=riscv
 export CROSS_COMPILE=riscv64-linux-gnu-
 
-CI_HOSTNAME=ip-172-31-63-27
+CI_HOSTNAME=
 
 if [ $(hostname)1 == ${CI_HOSTNAME}1 ]; then
     # for CI environment

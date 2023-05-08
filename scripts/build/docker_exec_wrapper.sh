@@ -1,5 +1,5 @@
 #!/bin/bash
-CI_HOSTNAME=ip-172-31-63-27
+CI_HOSTNAME=
 IMAGE=duvisor/build-env:v1
 
 if [ $(hostname)1 == ${CI_HOSTNAME}1 ]; then
