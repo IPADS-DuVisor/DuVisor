@@ -6,7 +6,7 @@ DuVisor is a user-level hypervisor with high performance based on delegated virt
 
 [![ci-status](https://github.com/IPADS-DuVisor/DuVisor/actions/workflows/ci.yml/badge.svg)](https://github.com/IPADS-DuVisor/DuVisor/actions/)[![rust-version](https://img.shields.io/badge/rustc-stable-blue.svg)](https://blog.rust-lang.org/)
 
-<img src="./figures/arch-duvisor.png" width="600px" />
+<img src="./figures/arch-all-dark.png" width="600px" />
 
 <!--ts-->
 * [DuVisor](#duvisor)
@@ -35,7 +35,7 @@ Compared with the traditional virtualization, DuVisor has the following advantag
 
 DuVisor serves VMs directly in user space with a one-to-one model to bring greater isolation to the entire system.
 
-<img src="./figures/arch-all-dark.png" width="600px" />
+<img src="./figures/arch-duvisor.png" width="600px" />
 
 With a seperate hypervisor process that serves only itself, a VM gains stronger isolation from other VMs and DuVisor processes. The host kernel is also free from the hypervisor's security vulnerabilities.
 
