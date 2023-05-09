@@ -1,4 +1,8 @@
-<img src="./figures/logo-long.png" width="450px" />
+<picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./logo-long-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="./logo-long-light.png">
+    <img alt="Logo of DuVisor." src="./logo-long-light.png">
+</picture>
 
 DuVisor is a user-level hypervisor with high performance based on delegated virtualization. It deprivileges all the vulnerable subsystems of traditional hypervisors into user space, reducing the host kernel’s attack surface and preventing any of hypervisor's vulnerabilities from jeopardizing it. The Rust language and one-to-one model further ensures the isolation and reliability.
 
