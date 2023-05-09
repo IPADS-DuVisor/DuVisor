@@ -11,9 +11,9 @@ DuVisor is a user-level hypervisor with high performance based on delegated virt
 [![ci-status](https://github.com/IPADS-DuVisor/DuVisor/actions/workflows/ci.yml/badge.svg)](https://github.com/IPADS-DuVisor/DuVisor/actions/)[![rust-version](https://img.shields.io/badge/rustc-stable-blue.svg)](https://blog.rust-lang.org/)
 
 <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./figures/overview-dark.png 1x">
-    <source media="(prefers-color-scheme: light)" srcset="./figures/overview-light.png 1x">
-    <img alt="Overview of DuVisor." src="./figures/overview-light.png 1x">
+    <source media="(prefers-color-scheme: dark)" srcset="./figures/overview-dark.png 3x">
+    <source media="(prefers-color-scheme: light)" srcset="./figures/overview-light.png 3x">
+    <img alt="Overview of DuVisor." src="./figures/overview-light.png 3x">
 </picture>
 
 <!--ts-->
@@ -44,17 +44,17 @@ Compared with the traditional virtualization, DuVisor has the following advantag
 DuVisor serves VMs directly in user space with a one-to-one model to bring greater isolation to the entire system.
 
 <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./figures/arch-dark.png 1x">
-    <source media="(prefers-color-scheme: light)" srcset="./figures/arch-light.png 1x">
-    <img alt="Architecture of DuVisor." src="./figures/arch-light.png 1x">
+    <source media="(prefers-color-scheme: dark)" srcset="./figures/arch-dark.png 3x">
+    <source media="(prefers-color-scheme: light)" srcset="./figures/arch-light.png 3x">
+    <img alt="Architecture of DuVisor." src="./figures/arch-light.png 3x">
 </picture>
 
 With a seperate hypervisor process that serves only itself, a VM gains stronger isolation from other VMs and DuVisor processes. The host kernel is also free from the hypervisor's security vulnerabilities.
 
 <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./figures/arch-isol-dark.png 3x">
-    <source media="(prefers-color-scheme: light)" srcset="./figures/arch-isol-light.png 3x">
-    <img alt="Architecture of DuVisor." src="./figures/arch-isol-light.png 3x">
+    <source media="(prefers-color-scheme: dark)" srcset="./figures/arch-isol-dark.png 4x">
+    <source media="(prefers-color-scheme: light)" srcset="./figures/arch-isol-light.png 4x">
+    <img alt="Architecture of DuVisor." src="./figures/arch-isol-light.png 4x">
 </picture>
 
 All data interactions between the VM and the hypervisor are no longer intervened by the host kernel as in traditional virtualization. DuVisor can directly handle the traps from VMs in a more integrated way, which reduces complexity while boosting the performance. 
@@ -62,9 +62,9 @@ All data interactions between the VM and the hypervisor are no longer intervened
 DuVisor relies on a new hardware extension called DV-Ext to catch VM exits directly in user space. The hardware extension imports VM exits directly into the user state and provides virtualization-related registers to the user-level software to access VM states and control VM behaviors.
 
 <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./figures/arch-plane-dark.png 3x">
-    <source media="(prefers-color-scheme: light)" srcset="./figures/arch-plane-light.png 3x">
-    <img alt="Architecture of DuVisor." src="./figures/arch-plane-light.png 3x">
+    <source media="(prefers-color-scheme: dark)" srcset="./figures/arch-plane-dark.png 4x">
+    <source media="(prefers-color-scheme: light)" srcset="./figures/arch-plane-light.png 4x">
+    <img alt="Architecture of DuVisor." src="./figures/arch-plane-light.png 4x">
 </picture>
 
 DuVisor is developed in user space making it more flexible than kernel modules. For example, it uses the Rust language to build the main functionalities and thus obtains great security. At the same time, DuVisor is also able to quickly reuse rich off-the-shelf projects, such as Firecracker's I/O backend.
