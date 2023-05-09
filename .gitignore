@@ -17,3 +17,4 @@ Cargo.lock
 vm.log
 linux-guest
 linux-*.tar.xz
+.DS_Store
