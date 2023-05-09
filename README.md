@@ -10,7 +10,7 @@ DuVisor is a user-level hypervisor with high performance based on delegated virt
 
 [![ci-status](https://github.com/IPADS-DuVisor/DuVisor/actions/workflows/ci.yml/badge.svg)](https://github.com/IPADS-DuVisor/DuVisor/actions/)[![rust-version](https://img.shields.io/badge/rustc-stable-blue.svg)](https://blog.rust-lang.org/)
 
-<picture>
+<picture width="600px">
     <source media="(prefers-color-scheme: dark)" srcset="./figures/overview-dark.png">
     <source media="(prefers-color-scheme: light)" srcset="./figures/overview-light.png">
     <img alt="Overview of DuVisor." src="./figures/overview-light.png">
@@ -43,7 +43,7 @@ Compared with the traditional virtualization, DuVisor has the following advantag
 
 DuVisor serves VMs directly in user space with a one-to-one model to bring greater isolation to the entire system.
 
-<picture>
+<picture width="600px">
     <source media="(prefers-color-scheme: dark)" srcset="./figures/arch-dark.png">
     <source media="(prefers-color-scheme: light)" srcset="./figures/arch-light.png">
     <img alt="Architecture of DuVisor." src="./figures/arch-light.png">
@@ -51,7 +51,7 @@ DuVisor serves VMs directly in user space with a one-to-one model to bring great
 
 With a seperate hypervisor process that serves only itself, a VM gains stronger isolation from other VMs and DuVisor processes. The host kernel is also free from the hypervisor's security vulnerabilities.
 
-<picture>
+<picture width="400px">
     <source media="(prefers-color-scheme: dark)" srcset="./figures/arch-isol-dark.png">
     <source media="(prefers-color-scheme: light)" srcset="./figures/arch-isol-light.png">
     <img alt="Architecture of DuVisor." src="./figures/arch-isol-light.png">
@@ -61,7 +61,7 @@ All data interactions between the VM and the hypervisor are no longer intervened
 
 DuVisor relies on a new hardware extension called DV-Ext to catch VM exits directly in user space. The hardware extension imports VM exits directly into the user state and provides virtualization-related registers to the user-level software to access VM states and control VM behaviors.
 
-<picture>
+<picture width="400px">
     <source media="(prefers-color-scheme: dark)" srcset="./figures/arch-plane-dark.png">
     <source media="(prefers-color-scheme: light)" srcset="./figures/arch-plane-light.png">
     <img alt="Architecture of DuVisor." src="./figures/arch-plane-light.png">
