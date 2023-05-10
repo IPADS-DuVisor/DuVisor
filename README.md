@@ -260,3 +260,19 @@ agfi=agfi-0e385553b7716f177
 deploytripletoverride=None
 customruntimeconfig=None
 ```
+## Cite
+
+If you find this work helpful for your publication, please cite DuVisor's OSDI'23 paper:
+
+```
+@inproceedings {chen2023duvisor,
+author = {Jiahao Chen and Dingji Li and Zeyu Mi and Yuxuan Liu and Binyu Zang and Haibing Guan and Haibo Chen},
+title = {Security and Performance in the Delegated User-level Virtualization},
+booktitle = {17th USENIX Symposium on Operating Systems Design and Implementation (OSDI 23)},
+year = {2023},
+address = {Boston, MA},
+url = {https://www.usenix.org/conference/osdi23/presentation/chen-jiahao},
+publisher = {USENIX Association},
+month = jul,
+}
+```
