@@ -31,13 +31,13 @@ DuVisor is a user-level hypervisor with high performance based on delegated virt
 
 Compared with traditional virtualization, DuVisor offers several advantages:
 
-1. High Security: By using a deprivileged hypervisor, DuVisor eliminates the kernel's attack surface introduced by virtualization. Moreover, the one-to-one service model improves the isolation between virtual machines (VMs) and the fault tolerance of the system.
+1. **High Security:** By using a deprivileged hypervisor, DuVisor eliminates the kernel's attack surface introduced by virtualization. Moreover, the one-to-one service model improves the isolation between virtual machines (VMs) and the fault tolerance of the system.
 
-2. Near-native Performance: DuVisor eliminates redundant mode switching, thereby fully unleashing the potential performance of virtualization. The integrated design also improves cooperation between modules, making the code more efficient.
+2. **Near-native Performance:** DuVisor eliminates redundant mode switching, thereby fully unleashing the potential performance of virtualization. The integrated design also improves cooperation between modules, making the code more efficient.
 
-3. Agile Development: Because of the thriving software environment in user space, DuVisor is no longer constrained by kernel development environments and can freely choose programming languages and existing libraries. Currently, the project uses Rust to ensure security and takes advantage of its powerful testing framework to improve project quality.
+3. **Agile Development:** Because of the thriving software environment in user space, DuVisor is no longer constrained by kernel development environments and can freely choose programming languages and existing libraries. Currently, the project uses Rust to ensure security and takes advantage of its powerful testing framework to improve project quality.
 
-4. Flexible Operations and Maintenance: DuVisor can be upgraded without rebooting the host system. New features and functionalities can be deployed more quickly. Cloud services will have better fault tolerance, benefiting from DuVisor's strong isolation.
+4. **Flexible Operations and Maintenance:** DuVisor can be upgraded without rebooting the host system. New features and functionalities can be deployed more quickly. Cloud services will have better fault tolerance, benefiting from DuVisor's strong isolation.
 
 ## Duvisor's Architecture
 
