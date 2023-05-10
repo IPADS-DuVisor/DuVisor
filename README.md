@@ -25,6 +25,7 @@ DuVisor is a user-level hypervisor with high performance based on delegated virt
       * [Build DuVisor for QEMU](#build-duvisor-for-qemu)
       * [Run Example VM on QEMU](#run-example-vm-on-qemu)
       * [Build DuVisor for FireSim](#build-duvisor-for-firesim)
+   * [Cite](#cite)
 <!--te-->
 
 ## Why DuVisor
