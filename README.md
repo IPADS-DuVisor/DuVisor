@@ -96,7 +96,7 @@ git submodule update --init --recursive
 
 We provide a docker image to build the whole environment for x86-64 CPUs, as well as the [Dockerfile](./scripts/opensource/Dockerfile) of this image.
 
-(Optional) To set up native environment for building, you can follow the Dockerfile.
+(Optional) To set up a native environment for building, you can follow the Dockerfile.
 
 Install Docker: https://docs.docker.com/engine/install/ubuntu/
 
@@ -120,7 +120,7 @@ cd ..
 
 ### Build DuVisor for QEMU
 
-You can build DuVisor and other elements for executing DuVisor (host/guest Linux kernel, rootfs, opensbi) via **one of** the following two scripts: 
+You can build DuVisor and other elements for executing DuVisor (host/guest Linux kernel, rootfs,OpenSBI) via **one of** the following two scripts: 
 
 [Build via docker](./scripts/quick_docker_build.sh):
 
@@ -136,7 +136,7 @@ You can build DuVisor and other elements for executing DuVisor (host/guest Linux
 
 ### Run Example VM on QEMU
 
-If you use docker build in last step:
+If you use the docker build in the last step:
 
 ```bash
 ./scripts/build/docker_exec_wrapper.sh ./scripts/run/example_boot.sh
@@ -146,7 +146,7 @@ cd duvisor
 ./boot.sh
 ```
 
-If you use native build in last step:
+If you use the native build in the last step:
 
 ```bash
 ./scripts/run/example_boot.sh
@@ -156,9 +156,9 @@ cd duvisor
 ./boot.sh
 ```
 
-You would see `DUVISOR` then.
+You would see `DuVisor` then.
 
-Reference bootlog:
+Reference boot log:
 ```
 bash> ./scripts/run/example_boot.sh
 
