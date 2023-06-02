@@ -83,7 +83,7 @@ Because DuVisor is developed in user space, it is more flexible than kernel modu
 
 Hardware requirements:
 
-* CPU: Commodity CPU with >= 4 cores which is able to run qemu. Architecture is not limitted.
+* CPU: Commodity CPU with >= 4 cores which is able to run QEMU. Architecture is not limitted.
 * Memory: >8GB
 
 First, clone this repository:
@@ -141,7 +141,7 @@ If you use docker build in last step:
 ```bash
 ./scripts/build/docker_exec_wrapper.sh ./scripts/run/example_boot.sh
 
-# In qemu
+# In QEMU
 cd duvisor
 ./boot.sh
 ```
@@ -151,7 +151,7 @@ If you use native build in last step:
 ```bash
 ./scripts/run/example_boot.sh
 
-# In qemu
+# In QEMU
 cd duvisor
 ./boot.sh
 ```
@@ -201,7 +201,7 @@ Please press Enter to activate this console.
     `-------'  `----'    `-'    `--'`----'  `---' `--'    
                                                            
                                                                   
-Welcome to DUVISOR (Qemu)
+Welcome to DUVISOR (QEMU)
 
 /* Skip some of the log */
 
