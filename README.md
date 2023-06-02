@@ -70,6 +70,8 @@ DuVisor relies on a new hardware extension called DV-Ext to catch VM exits direc
 
 Because DuVisor is developed in user space, it is more flexible than kernel modules. For instance, it uses the Rust language to build the main functionalities and therefore provides strong security. DuVisor can also quickly reuse existing off-the-shelf projects, such as Firecracker's I/O backend.
 
+**Note**: All directories under `./src/` except for `./src/duvisor` have been reused from I/O backend implementations of an early version of Firecracker.
+
 ## Quick Start
 
 ### Prerequisite
@@ -261,6 +263,7 @@ agfi=agfi-0e385553b7716f177
 deploytripletoverride=None
 customruntimeconfig=None
 ```
+
 ## Cite
 
 If you find this work helpful for your publication, please cite DuVisor's OSDI'23 paper:
