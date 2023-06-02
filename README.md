@@ -76,8 +76,8 @@ Because DuVisor is developed in user space, it is more flexible than kernel modu
 
 Hardware requirements:
 
-* CPU: Commodity CPU with >= 4 cores which is able to run qemu. Architecture is not limitted.
-* Memory: >8GB
+* CPU: Commodity CPU with >= 4 cores which is able to run QEMU. Architecture is not limited.
+* Memory: > 8GB
 
 First, clone this repository:
 
