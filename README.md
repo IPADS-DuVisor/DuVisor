@@ -274,8 +274,10 @@ author = {Jiahao Chen and Dingji Li and Zeyu Mi and Yuxuan Liu and Binyu Zang an
 title = {Security and Performance in the Delegated User-level Virtualization},
 booktitle = {17th USENIX Symposium on Operating Systems Design and Implementation (OSDI 23)},
 year = {2023},
+isbn = {978-1-939133-34-2},
 address = {Boston, MA},
-url = {https://www.usenix.org/conference/osdi23/presentation/chen-jiahao},
+pages = {209--226},
+url = {https://www.usenix.org/conference/osdi23/presentation/chen},
 publisher = {USENIX Association},
 month = jul,
 }
