@@ -1,6 +1,6 @@
 #!/bin/bash
 CI_HOSTNAME=ip-172-31-63-27
-IMAGE=duvisor/build-env:v1
+IMAGE=duvisor/build-env:v2
 
 if [ $(hostname)1 == ${CI_HOSTNAME}1 ]; then
     # for CI environment

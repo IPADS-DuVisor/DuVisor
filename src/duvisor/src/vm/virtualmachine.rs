@@ -839,7 +839,7 @@ mod tests {
 
             /* Answer */
             let entry_ans = 0x1000;
-            let phnum_ans = 1;
+            let phnum_ans = 2;
             let offset_ans = 0x1000;
             let paddr_ans = 0x1000;
             let vaddr_ans = 0x1000;
